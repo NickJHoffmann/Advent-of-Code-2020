@@ -1,4 +1,4 @@
-with open("day2.txt") as file:
+with open("day2.txt", 'r') as file:
     line = file.readline()
     validP1 = 0
     validP2 = 0
