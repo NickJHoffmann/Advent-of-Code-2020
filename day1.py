@@ -5,7 +5,7 @@ with open("day1.txt") as file:
     numToCheck = int(input("Enter number of entries to combine: "))
     num1 = 0
     num2 = 0
-    num3 = 0    #For part 2
+    num3 = 0
     if numToCheck == 2:
         for entry in data:
             temp = 2020-entry
