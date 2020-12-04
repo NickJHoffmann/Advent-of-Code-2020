@@ -1,9 +1,6 @@
 import re
 
-incorrect = [138]
-
-
-
+p2incorrect = [138, 102]
 
 filename = "day4.txt"
 
@@ -18,17 +15,13 @@ hgt = "^1([5-8][0-9]|9[0-3])cm|(59|(6[0-9]|7[0-6]))in$"
 hcl = "^#[0-9a-f]{6}$"
 ecl = "^(amb|blu|brn|gry|grn|hzl|oth)$"
 pid = "^[0-9]{9}$"
-
-
-def checkRegex(regex, string):
-    return len(re.findall(regex, string)) == 1
+regexs = {"byr": byr, "iyr": iyr, "eyr": eyr, "hgt": hgt, "hcl": hcl, "ecl": ecl, "pid": pid}
 
 
 def countValid(data, verifyFields):
     count = 0
-    fieldStatus = fieldStatus = {"byr": False, "iyr": False, "eyr": False, "hgt": False, "hcl": False, "ecl": False,
-                           "pid": False}        # Initialize passport to no valid fields
-    vals = {}
+    fieldStatus = {"byr": False, "iyr": False, "eyr": False, "hgt": False, "hcl": False, "ecl": False,
+                   "pid": False}  # Initialize passport to no valid fields
     required = ["byr", "iyr", "eyr", "hgt", "hcl", "ecl", "pid"]
 
     for line in data:
@@ -41,78 +34,12 @@ def countValid(data, verifyFields):
                 pass
             else:
                 validPassport = True
-
-                # If flag to check part 2 is set
-                if verifyFields:
-                    for key in vals.keys():
-                        if key == "cid":
-                            continue
-                        elif key == "byr":
-                            reg = re.search(byr, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "iyr":
-                            reg = re.search(iyr, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "eyr":
-                            reg = re.search(eyr, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "hgt":
-                            reg = re.search(hgt, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "hcl":
-                            reg = re.search(hcl, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "ecl":
-                            reg = re.search(ecl, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        elif key == "pid":
-                            reg = re.search(pid, vals[key].strip())
-                            print(key, vals[key], sep=", ", end=": ")
-                            print(reg, end=", length = ")
-                            print(reg.string)
-                            if reg is None:
-                                validPassport = False
-                                break
-                        else:
-                            continue
-                        fieldStatus[key] = True
-                else:
-                    for key in currentKeys:
-                        if key == "cid":
-                            continue
-                        elif fieldStatus[key] == False:
-                            validPassport = False
-                            break
+                for key in currentKeys:
+                    if key == "cid":
+                        continue
+                    elif fieldStatus[key] == False:
+                        validPassport = False
+                        break
 
                 if validPassport:
                     count += 1
@@ -120,13 +47,19 @@ def countValid(data, verifyFields):
             # Clear previous passport data to prepare for the next one
             fieldStatus = {"byr": False, "iyr": False, "eyr": False, "hgt": False, "hcl": False, "ecl": False,
                            "pid": False}
-            vals = {}
         else:
             items = line.split()
             for elem in items:
                 parts = elem.split(':')
-                fieldStatus[parts[0]] = True
-                vals[parts[0]] = parts[1]
+                field = parts[0]
+                if field == "cid":
+                    continue
+                if verifyFields:
+                    if re.search(regexs[field], parts[1]) is not None:
+                        fieldStatus[field] = True
+                else:
+                    fieldStatus[field] = True
+                print(fieldStatus)
     return count
 
 
