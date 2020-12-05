@@ -1,7 +1,5 @@
 import re
 
-p2incorrect = [138, 102]
-
 filename = "day4.txt"
 
 with open(filename, 'r') as file:
@@ -29,7 +27,7 @@ def countValid(data, verifyFields):
 
         # Found a blank line, meaning previous passport is finished loading and ready to check
         if len(line) == 0:
-            currentKeys = list(fieldStatus.keys())
+            currentKeys = fieldStatus.keys()
             if len(currentKeys) < len(required):
                 pass
             else:
@@ -59,7 +57,6 @@ def countValid(data, verifyFields):
                         fieldStatus[field] = True
                 else:
                     fieldStatus[field] = True
-                print(fieldStatus)
     return count
 
 
