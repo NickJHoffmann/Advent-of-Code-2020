@@ -1,47 +1,27 @@
 import re
 
-filename = "example1.txt"
+filename = "day7.txt"
 
 p1sum = 0
 bags = {}
 
 p2sum = 0
-usedBags = {}
-
-# Recursive function to check if a bag can be traced to "shiny gold"
-def checkBags(bag):
+# Recursive function to check if a bag can be traced to "shiny gold" for part 1
+def check_bags_p1(bag):
     global p1sum
-    global usedBags
     for bagName, bagVal in bag.items():
-        #print(bagName, bagVal)
+
         # If shiny gold has been reached, completely break out of function call for the given outer bag to move on
         if bagName == "shiny gold":
             p1sum += 1
-            #print("made it here")
-            return True
-            #raise Exception("Found valid bag path")
+            raise Exception("Found valid bag path")
         elif bags[bagName] != 0:
-            if checkBags(bags[bagName]):
-                try:
-                    print(usedBags)
-                    numUsed = usedBags[bagName][bagVal]
-                    print(numUsed)
-                    usedBags[bagName] = {bagVal: numUsed + 1}
-                except:
-                    usedBags[bagName] = {bagVal: 1}
-                    print(usedBags)
-                finally:
-                    return True
-            else:
-                continue
+            check_bags_p1(bags[bagName])
         else:
             continue
-    #return False
 
 
-def part1():
-    global p1sum
-    global usedBags
+def parse_data():
     with open(filename, 'r') as file:
         line = file.readline().strip()
         while line:
@@ -64,19 +44,40 @@ def part1():
                     valBags[tempBagKey] = tempBagNum    # Add this inner bag to the list of bags that can be put in keyBag
             bags[keyBag] = valBags
             line = file.readline().strip()
-    i = 1
+
+def part1():
+    parse_data()
     for outerBag in bags.keys():
         if bags[outerBag] != 0:
 
             # Checks if the current bag can be traced back to "shiny gold" bag
             # checkBags raises exception to break out of recursion if it reaches "shiny gold" at any point, so
             # it will increment the counter and move on to check the next outer bag
-            checkBags(bags[outerBag])
-            print(i)
-            #print(usedBags)
-            usedBags = {}
-        i += 1
+            try:
+                check_bags_p1(bags[outerBag])
+            except:
+                continue
+
+
+def check_bags_p2(bag):
+    global p2sum
+    numBags = 0
+    for bagName, bagVal in bag.items():
+        if bags[bagName] != 0:
+            numBags += (bagVal + bagVal * check_bags_p2(bags[bagName]))
+        else:
+            numBags += bagVal
+    return numBags
+
+def part2():
+    parse_data()
+    return check_bags_p2(bags["shiny gold"])
+
+
 
 # Part 1
 part1()
 print("Answer to Part 1: {}".format(p1sum))
+
+print("Answer to Part 2: {}".format(part2()))
+
