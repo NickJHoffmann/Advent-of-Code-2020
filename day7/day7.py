@@ -58,9 +58,8 @@ def part1():
             except:
                 continue
 
-
+# Recursive function to determine how many bags are contained within a given starter bag
 def check_bags_p2(bag):
-    global p2sum
     numBags = 0
     for bagName, bagVal in bag.items():
         if bags[bagName] != 0:
