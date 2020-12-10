@@ -28,19 +28,27 @@ completePaths = {}
 setData = set(data)
 
 
-def find_paths(index):
+def find_paths(start):
     paths = 0
-    start = data[index]
+
+    # Base case, made it to the last device
     if start == data[-1]:
         return 1
+
+    # Check if the path count has already been found for this adapter device
     if start in completePaths:
         return completePaths[start]
+
+    # Adapters can adapt up to 3 joltage higher, so check paths for each adaption
     if start + 1 in setData:
-        paths += find_paths(data.index(start + 1))
+        paths += find_paths(start + 1)
     if start + 2 in setData:
-        paths += find_paths(data.index(start + 2))
+        paths += find_paths(start + 2)
     if start + 3 in setData:
-        paths += find_paths(data.index(start + 3))
+        paths += find_paths(start + 3)
+
+    # Assign path count to dictionary of already-checked paths to prevent having to fully recurse if this adapter
+    # is encountered later
     completePaths[start] = paths
     return paths
 
