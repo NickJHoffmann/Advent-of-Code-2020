@@ -24,7 +24,7 @@ def calculate_differences():
     return diff1 * diff3
 
 
-completePaths = {}
+completePaths = {}  # Store path counts for every adapter for memoization
 setData = set(data)
 
 
