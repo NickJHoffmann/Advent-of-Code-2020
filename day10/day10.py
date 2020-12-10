@@ -29,8 +29,6 @@ setData = set(data)
 
 
 def find_paths(start):
-    paths = 0
-
     # Base case, made it to the last device
     if start == data[-1]:
         return 1
@@ -38,6 +36,8 @@ def find_paths(start):
     # Check if the path count has already been found for this adapter device
     if start in completePaths:
         return completePaths[start]
+
+    paths = 0
 
     # Adapters can adapt up to 3 joltage higher, so check paths for each adaption
     if start + 1 in setData:
