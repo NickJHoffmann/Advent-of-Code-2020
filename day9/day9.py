@@ -14,10 +14,9 @@ def find_num():
     for i in range(preamble, len(data)):
         target = data[i]
         valid = False
-        for x in range(i-preamble, i-1):
-            for j in range(i-preamble+1, i):
-                #print(data[x], data[j])
-                if data[x] + data[j] == target:
+        for j in range(i-preamble, i-1):
+            for k in range(i-preamble+1, i):
+                if data[j] + data[k] == target:
                     valid = True
         if not valid:
             return tuple((i, target))
