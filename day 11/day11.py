@@ -10,59 +10,19 @@ with open(filename, 'r') as file:
         line = file.readline()
 
 
-def find_occupied_adjacent_p1(xVal, yVal, data):
-    total = 0
-    try:
-        if data[yVal][xVal + 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if xVal - 1 < 0:
-            raise IndexError
-        if data[yVal][xVal - 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if data[yVal + 1][xVal] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if yVal - 1 < 0:
-            raise IndexError
-        if data[yVal - 1][xVal] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if data[yVal + 1][xVal + 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if xVal - 1 < 0:
-            raise IndexError
-        if data[yVal + 1][xVal - 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if yVal - 1 < 0:
-            raise IndexError
-        if data[yVal - 1][xVal + 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    try:
-        if xVal - 1 < 0 or yVal - 1 < 0:
-            raise IndexError
-        if data[yVal - 1][xVal - 1] == "#":
-            total += 1
-    except IndexError:
-        pass
-    return total
+def find_occupied_p1(xval, yval, data):
+    count = 0
+    for yoffset in range(-1, 2):
+        testy = yval + yoffset
+        if not (0 <= testy < len(data)):
+            continue
+        for xoffset in range(-1, 2):
+            testx = xval + xoffset
+            if not (0 <= testx < len(data[yval])) or (testx == xval and testy == yval):
+                continue
+            if data[testy][testx] == "#":
+                count += 1
+    return count
 
 
 def part1():
@@ -75,12 +35,12 @@ def part1():
             x = 0
             while x < len(data[y]):
                 if data[y][x] == "L":
-                    occupiedAdjacent = find_occupied_adjacent_p1(x, y, data)
+                    occupiedAdjacent = find_occupied_p1(x, y, data)
                     if occupiedAdjacent == 0:
                         newData[y][x] = "#"
                         modified = True
                 elif data[y][x] == "#":
-                    occupiedAdjacent = find_occupied_adjacent_p1(x, y, data)
+                    occupiedAdjacent = find_occupied_p1(x, y, data)
                     if occupiedAdjacent >= 4:
                         newData[y][x] = "L"
                         modified = True
