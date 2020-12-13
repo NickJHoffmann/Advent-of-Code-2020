@@ -1,3 +1,5 @@
+import math
+
 filename = "day12.txt"
 
 data = []
@@ -16,10 +18,14 @@ def part1():
         val = int(data[i][1:])
         if inst == "F":
             directions[lastDir] += val
+
+        # Left means move left in direction list, right means move right
         elif inst == "L":
             dir = val // 90
             lastDir = directionList[directionList.index(lastDir) - dir]
+
         elif inst == "R":
+            # Calculate overflow if turning right past West
             dir = val // 90
             lastIndex = directionList.index(lastDir)
             if lastIndex + dir > len(directionList):
@@ -37,4 +43,38 @@ def part1():
     return NS + EW
 
 
+def part2():
+    waypoint = (10, 1)  # Given that waypoint starts 10 east, 1 north
+    ship = (0, 0)
+    for i in range(len(data)):
+        inst = data[i][0]
+        val = int(data[i][1:])
+        wayX, wayY = waypoint
+        shipX, shipY = ship
+        if inst == "F":
+            shipX += val * wayX
+            shipY += val * wayY
+        elif inst == "N":
+            wayY += val
+        elif inst == "E":
+            wayX += val
+        elif inst == "S":
+            wayY -= val
+        elif inst == "W":
+            wayX -= val
+        elif inst == "L" or inst == "R":
+            if inst == "R":
+                val *= -1   # Positive degree means counter-clockwise rotation, negative means clockwise
+            # Rotate waypoint around ship
+            tempX = (wayX * round(math.cos(math.radians(val)))) - (wayY * round(math.sin(math.radians(val))))
+            tempY = (wayX * round(math.sin(math.radians(val)))) + (wayY * round(math.cos(math.radians(val))))
+            wayX = tempX
+            wayY = tempY
+        ship = (shipX, shipY)
+        waypoint = (wayX, wayY)
+    finalX, finalY = ship
+    return abs(finalX) + abs(finalY)
+
+
 print("Answer to Part 1:", part1())
+print("Answer to Part 2:", part2())
